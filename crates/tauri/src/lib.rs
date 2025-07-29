@@ -39,15 +39,15 @@ fn greet(name: &str) -> String {
 fn speak(text: &str) -> String {
     // ダウンローダーにて`onnxruntime`としてダウンロードできるもの
     const VVORT: &str = concatcp!(
-        "./voicevox_core/onnxruntime/lib/",
+        "../../voicevox_core/onnxruntime/lib/",
         Onnxruntime::LIB_VERSIONED_FILENAME,
     );
 
     // ダウンローダーにて`dict`としてダウンロードできるもの
-    const OJT_DIC: &str = "./voicevox_core/dict/open_jtalk_dic_utf_8-1.11";
+    const OJT_DIC: &str = "../../voicevox_core/dict/open_jtalk_dic_utf_8-1.11";
 
     // ダウンローダーにて`models`としてダウンロードできるもの
-    const VVM: &str = "./voicevox_core/models/vvms/0.vvm";
+    const VVM: &str = "../../voicevox_core/models/vvms/0.vvm";
 
     const TARGET_CHARACTER_NAME: &str = "ずんだもん";
     const TARGET_STYLE_NAME: &str = "ノーマル";
