@@ -1,9 +1,9 @@
-import { Form } from "radix-ui";
 import { useSpeak } from "../../api/hooks.ts";
 import { Textarea } from "./components/Textarea.tsx";
 import { IconButton } from "./components/IconButton.tsx";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
+import { chatPageLayout, inputContainer, textareaStyle } from "./chat.css.ts";
 
 type ChatForm = {
   text: string;
@@ -17,17 +17,14 @@ export const Chat = () => {
     reset();
   }
 
-  return <Form.Root onSubmit={handleSubmit(onSubmit)}>
-    <Form.Field name="text">
-      <Form.Label>文章</Form.Label>
-      <Form.Control asChild>
-        <Textarea {...register('text', { required: true })} />
-      </Form.Control>
-    </Form.Field>
-    <Form.Submit asChild>
-      <IconButton type="submit" label="送信" disabled={!isValid}>
-        <PaperPlaneIcon />
-      </IconButton>
-    </Form.Submit>
-  </Form.Root>
+  return (
+    <div className={chatPageLayout}>
+      <div className={inputContainer}>
+        <Textarea {...register('text', { required: true })} className={textareaStyle} />
+        <IconButton label="送信" disabled={!isValid} onClick={handleSubmit(onSubmit)}>
+          <PaperPlaneIcon />
+        </IconButton>
+      </div>
+    </div>
+  )
 }

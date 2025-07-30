@@ -9,14 +9,14 @@ export const iconButtonStyle = style({
   lineHeight: "1.5",
   borderRadius: "0.375rem",
   border: "1px solid transparent",
-  backgroundColor: "#f8f9fa",
+  backgroundColor: "rgba(0,123,255,0.25)",
   color: "#212529",
   cursor: "pointer",
   transition: "background-color 0.2s, border-color 0.2s",
 
   selectors: {
     "&:hover": {
-      backgroundColor: "#e9ecef",
+      backgroundColor: "rgba(0,123,255,0.5)",
       borderColor: "#ced4da",
     },
     "&:focus": {
