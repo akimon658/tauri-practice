@@ -1,5 +1,5 @@
 import { Form } from "radix-ui";
-import { useSpeak } from "../api/hooks";
+import { useSpeak } from "../../api/hooks.ts";
 
 export const Chat = () => {
   const { mutate: speak } = useSpeak();
