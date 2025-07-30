@@ -16,7 +16,7 @@ pub fn run() -> anyhow::Result<()> {
 
     specta_builder.export(
         specta_typescript::Typescript::default(),
-        "../../ui/api/bindings.ts",
+        "../../ui/api/bindings.gen.ts",
     )?;
 
     Ok(tauri::Builder::default()
