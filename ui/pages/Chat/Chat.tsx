@@ -1,5 +1,6 @@
 import { Form } from "radix-ui";
 import { useSpeak } from "../../api/hooks.ts";
+import { Textarea } from "./components/Textarea.tsx";
 
 export const Chat = () => {
   const { mutate: speak } = useSpeak();
@@ -14,7 +15,7 @@ export const Chat = () => {
     <Form.Field name="text">
       <Form.Label>文章</Form.Label>
       <Form.Control asChild>
-        <textarea />
+        <Textarea />
       </Form.Control>
     </Form.Field>
     <Form.Submit asChild>
