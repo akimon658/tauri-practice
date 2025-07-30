@@ -1,3 +1,5 @@
+use tauri::Manager;
+
 #[tauri::command]
 #[specta::specta]
 fn speak(text: &str) -> Result<(), String> {
@@ -18,6 +20,19 @@ pub fn run() -> anyhow::Result<()> {
     )?;
 
     Ok(tauri::Builder::default()
+        .setup(|app| {
+            #[cfg(debug_assertions)]
+            match app.get_webview_window("main") {
+                Some(w) => {
+                    w.open_devtools();
+                }
+                None => {
+                    eprintln!("Failed to open devtools: main window not found");
+                }
+            }
+
+            Ok(())
+        })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![speak])
         .run(tauri::generate_context!())?)
