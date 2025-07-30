@@ -6,3 +6,10 @@ members = [
 
 [workspace.package]
 edition = "2024"
+
+[workspace.dependencies]
+anyhow = "1.0.98"
+const_format = "0.2.34"
+rodio = { version = "0.21.1", default-features = false}
+thiserror = "2.0.12"
+voicevox_core = { git = "https://github.com/VOICEVOX/voicevox_core", version = "0.0.0"}
