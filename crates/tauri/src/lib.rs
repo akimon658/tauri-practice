@@ -1,28 +1,24 @@
-#[derive(Debug, thiserror::Error)]
-enum Error {
-    #[error(transparent)]
-    Anyhow(#[from] anyhow::Error),
-}
-
-impl serde::Serialize for Error {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        serializer.serialize_str(&self.to_string())
-    }
-}
-
 #[tauri::command]
-fn speak(text: &str) -> Result<(), Error> {
-    Ok(voice::speak(text)?)
+#[specta::specta]
+fn speak(text: &str) -> Result<(), String> {
+    voice::speak(text)
+        .map_err(|e| format!("Failed to speak: {}", e))
+        .map(|_| ())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-pub fn run() {
-    tauri::Builder::default()
+pub fn run() -> anyhow::Result<()> {
+    let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
+        .commands(tauri_specta::collect_commands![speak])
+        .error_handling(tauri_specta::ErrorHandlingMode::Throw);
+
+    specta_builder.export(
+        specta_typescript::Typescript::default(),
+        "../../ui/api/bindings.ts",
+    )?;
+
+    Ok(tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![speak])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!())?)
 }

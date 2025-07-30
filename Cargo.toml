@@ -11,5 +11,7 @@ edition = "2024"
 anyhow = "1.0.98"
 const_format = "0.2.34"
 rodio = { version = "0.21.1", default-features = false}
-thiserror = "2.0.12"
+specta = "=2.0.0-rc.22"
+specta-typescript = "0.0.9"
+tauri-specta = { version = "=2.0.0-rc.21" }
 voicevox_core = { git = "https://github.com/VOICEVOX/voicevox_core", version = "0.0.0"}
