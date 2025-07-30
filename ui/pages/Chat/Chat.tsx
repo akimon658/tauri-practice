@@ -1,6 +1,8 @@
 import { Form } from "radix-ui";
 import { useSpeak } from "../../api/hooks.ts";
 import { Textarea } from "./components/Textarea.tsx";
+import { IconButton } from "./components/IconButton.tsx";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 
 export const Chat = () => {
   const { mutate: speak } = useSpeak();
@@ -19,7 +21,9 @@ export const Chat = () => {
       </Form.Control>
     </Form.Field>
     <Form.Submit asChild>
-      <button>読み上げ</button>
+      <IconButton type="submit" label="送信">
+        <PaperPlaneIcon />
+      </IconButton>
     </Form.Submit>
   </Form.Root>
 }
