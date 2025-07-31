@@ -1,5 +1,9 @@
 use tauri::Manager;
 
+struct AppState {
+    repository: repository::RepositoryImpl,
+}
+
 #[tauri::command]
 #[specta::specta]
 fn speak(text: &str) -> Result<(), String> {
@@ -19,7 +23,7 @@ pub fn run() -> anyhow::Result<()> {
         "../../ui/api/bindings.gen.ts",
     )?;
 
-    Ok(tauri::Builder::default()
+    tauri::Builder::default()
         .setup(|app| {
             #[cfg(debug_assertions)]
             match app.get_webview_window("main") {
@@ -33,7 +37,26 @@ pub fn run() -> anyhow::Result<()> {
 
             Ok(())
         })
+        .setup(|app| {
+            tauri::async_runtime::block_on(async || -> anyhow::Result<()> {
+                let sqlite_file_path = if cfg!(debug_assertions) {
+                    std::env::current_dir()?.join("../../data")
+                } else {
+                    app.path().data_dir()?
+                }
+                .join("db.sqlite");
+                let repository = repository::RepositoryImpl::new(sqlite_file_path).await?;
+
+                app.manage(AppState { repository });
+
+                Ok(())
+            }())?;
+
+            Ok(())
+        })
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![speak])
-        .run(tauri::generate_context!())?)
+        .run(tauri::generate_context!())?;
+
+    Ok(())
 }
