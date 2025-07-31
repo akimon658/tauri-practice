@@ -25,10 +25,14 @@ impl RepositoryImpl {
         Ok(RepositoryImpl { conn })
     }
 
-    pub async fn save_message(&mut self, message: &str) -> anyhow::Result<()> {
-        sqlx::query!("INSERT INTO messages (content) VALUES (?)", message)
-            .execute(&mut self.conn)
-            .await?;
+    pub async fn save_message(&mut self, message: &str, by_zundamon: bool) -> anyhow::Result<()> {
+        sqlx::query!(
+            "INSERT INTO messages (content, by_zundamon) VALUES (?, ?)",
+            message,
+            by_zundamon
+        )
+        .execute(&mut self.conn)
+        .await?;
 
         Ok(())
     }

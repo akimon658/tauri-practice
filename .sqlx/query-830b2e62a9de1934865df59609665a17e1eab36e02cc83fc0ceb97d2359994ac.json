@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO messages (content, by_zundamon) VALUES (?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "830b2e62a9de1934865df59609665a17e1eab36e02cc83fc0ceb97d2359994ac"
+}
