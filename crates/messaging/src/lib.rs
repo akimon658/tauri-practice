@@ -1,0 +1,17 @@
+pub struct MessagingService {
+    repository: repository::RepositoryImpl,
+}
+
+impl MessagingService {
+    pub fn new(repository: repository::RepositoryImpl) -> Self {
+        MessagingService { repository }
+    }
+
+    pub async fn send_message(&mut self, message: &str) -> anyhow::Result<String> {
+        self.repository.save_message(message, false).await?;
+
+        let response = message.to_string();
+
+        Ok(response)
+    }
+}

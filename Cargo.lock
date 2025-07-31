@@ -2612,6 +2612,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "messaging"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "repository",
+]
+
+[[package]]
 name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5081,6 +5089,7 @@ name = "tauri-practice"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "messaging",
  "repository",
  "serde",
  "serde_json",

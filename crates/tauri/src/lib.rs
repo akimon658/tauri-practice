@@ -1,7 +1,7 @@
 use tauri::Manager;
 
 struct AppState {
-    repository: repository::RepositoryImpl,
+    messaging_service: messaging::MessagingService,
 }
 
 #[tauri::command]
@@ -46,8 +46,9 @@ pub fn run() -> anyhow::Result<()> {
                 }
                 .join("db.sqlite");
                 let repository = repository::RepositoryImpl::new(sqlite_file_path).await?;
+                let messaging_service = messaging::MessagingService::new(repository);
 
-                app.manage(AppState { repository });
+                app.manage(AppState { messaging_service });
 
                 Ok(())
             }())?;
