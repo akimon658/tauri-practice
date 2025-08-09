@@ -28,8 +28,9 @@ async fn send_message(state: tauri::State<'_, AppState>, message: &str) -> Resul
 
 #[tauri::command]
 #[specta::specta]
-fn speak(text: &str) -> Result<(), String> {
+async fn speak(text: &str) -> Result<(), String> {
     voice::speak(text)
+        .await
         .map_err(|e| format!("Failed to speak: {}", e))
         .map(|_| ())
 }

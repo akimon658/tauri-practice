@@ -10,7 +10,7 @@ const VVM: &str = "../../voicevox_core/models/vvms/0.vvm";
 const TARGET_CHARACTER_NAME: &str = "ずんだもん";
 const TARGET_STYLE_NAME: &str = "ノーマル";
 
-pub fn speak(text: &str) -> anyhow::Result<(), anyhow::Error> {
+pub async fn speak(text: &str) -> anyhow::Result<(), anyhow::Error> {
     let synth = {
         let ort = Onnxruntime::load_once().filename(VVORT).perform()?;
         let ojt = OpenJtalk::new(OJT_DIC)?;
