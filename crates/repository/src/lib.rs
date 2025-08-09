@@ -22,7 +22,7 @@ impl RepositoryImpl {
     pub async fn get_messages(&self) -> anyhow::Result<Vec<model::Message>> {
         sqlx::query_as!(
             model::Message,
-            r#"SELECT id as "id: u32", content, by_zundamon FROM messages ORDER BY created_at DESC"#,
+            r#"SELECT id as "id: u32", content, by_zundamon FROM messages ORDER BY id DESC"#,
         )
         .fetch_all(&self.pool)
         .await
