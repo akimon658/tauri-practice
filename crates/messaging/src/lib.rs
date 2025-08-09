@@ -21,4 +21,8 @@ impl MessagingService {
 
         Ok(response)
     }
+
+    pub async fn delete_all_messages(&self) -> anyhow::Result<()> {
+        self.repository.delete_all_messages().await
+    }
 }

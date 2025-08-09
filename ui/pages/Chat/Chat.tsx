@@ -1,10 +1,10 @@
 import { Textarea } from "./components/Textarea.tsx";
 import { IconButton } from "./components/IconButton.tsx";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { PaperPlaneIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useForm } from "react-hook-form";
-import { chatPageLayout, inputContainer, messagesContainer, messageStyleBase, textareaStyle, userMessageStyle, zundamonMessageStyle } from "./chat.css.ts";
+import { buttonsLayout, chatPageLayout, inputContainer, messagesContainer, messageStyleBase, textareaStyle, userMessageStyle, zundamonMessageStyle } from "./chat.css.ts";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getMessagesKey, sendMessageKey } from "../../api/mutation_keys.ts";
+import { deleteAllMessagesKey, getMessagesKey, sendMessageKey } from "../../api/mutation_keys.ts";
 import { commands, Message } from "../../api/bindings.gen.ts";
 
 type ChatForm = {
@@ -47,6 +47,12 @@ export const Chat = () => {
   const onSubmit = (data: ChatForm) => {
     sendMessage(data.text);
   }
+  const { mutate: resetMessages } = useMutation({
+    mutationKey: deleteAllMessagesKey,
+    mutationFn: commands.deleteAllMessages,
+    onSuccess: () => queryClient.setQueryData<Message[]>(getMessagesKey, [])
+
+  })
 
   return (
     <div className={chatPageLayout}>
@@ -59,9 +65,14 @@ export const Chat = () => {
       </div>
       <div className={inputContainer}>
         <Textarea {...register('text', { required: true })} className={textareaStyle} />
-        <IconButton label="送信" disabled={!isValid} onClick={handleSubmit(onSubmit)}>
-          <PaperPlaneIcon />
-        </IconButton>
+        <div className={buttonsLayout}>
+          <IconButton label="リセット" onClick={() => resetMessages()}>
+            <TrashIcon />
+          </IconButton>
+          <IconButton label="送信" disabled={!isValid} onClick={handleSubmit(onSubmit)}>
+            <PaperPlaneIcon />
+          </IconButton>
+        </div>
       </div>
     </div>
   )

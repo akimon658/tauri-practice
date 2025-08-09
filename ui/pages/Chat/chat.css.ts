@@ -44,3 +44,9 @@ export const inputContainer = style({
 export const textareaStyle = style({
   flexGrow: 1,
 })
+
+export const buttonsLayout = style({
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+})

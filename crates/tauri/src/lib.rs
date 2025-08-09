@@ -28,6 +28,17 @@ async fn send_message(state: tauri::State<'_, AppState>, message: &str) -> Resul
 
 #[tauri::command]
 #[specta::specta]
+async fn delete_all_messages(state: tauri::State<'_, AppState>) -> Result<(), String> {
+    let service = &state.messaging_service;
+
+    service
+        .delete_all_messages()
+        .await
+        .map_err(|e| format!("Failed to delete all messages: {}", e))
+}
+
+#[tauri::command]
+#[specta::specta]
 async fn speak(text: &str) -> Result<(), String> {
     voice::speak(text)
         .await
@@ -41,6 +52,7 @@ pub fn run() -> anyhow::Result<()> {
         .commands(tauri_specta::collect_commands![
             get_messages,
             send_message,
+            delete_all_messages,
             speak,
         ])
         .typ::<model::Message>()
@@ -81,7 +93,12 @@ pub fn run() -> anyhow::Result<()> {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![get_messages, send_message, speak])
+        .invoke_handler(tauri::generate_handler![
+            get_messages,
+            send_message,
+            delete_all_messages,
+            speak
+        ])
         .run(tauri::generate_context!())?;
 
     Ok(())

@@ -11,6 +11,9 @@ async getMessages() : Promise<Message[]> {
 async sendMessage(message: string) : Promise<string> {
     return await TAURI_INVOKE("send_message", { message });
 },
+async deleteAllMessages() : Promise<null> {
+    return await TAURI_INVOKE("delete_all_messages");
+},
 async speak(text: string) : Promise<null> {
     return await TAURI_INVOKE("speak", { text });
 }

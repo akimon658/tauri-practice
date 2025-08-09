@@ -40,4 +40,13 @@ impl RepositoryImpl {
 
         Ok(())
     }
+
+    pub async fn delete_all_messages(&self) -> anyhow::Result<()> {
+        sqlx::query!("DELETE FROM messages")
+            .execute(&self.pool)
+            .await
+            .with_context(|| "delete all messages from database")?;
+
+        Ok(())
+    }
 }
