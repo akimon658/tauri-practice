@@ -27,7 +27,14 @@ export const Chat = () => {
   const { mutate: sendMessage } = useMutation({
     mutationKey: sendMessageKey,
     mutationFn: commands.sendMessage,
-    onSuccess: commands.speak,
+    onSuccess: (res) => {
+      commands.speak(res)
+      queryClient.setQueryData<Message[]>(getMessagesKey, (oldMessages) => [...(oldMessages ?? []), {
+        id: Math.random(),
+        content: res,
+        by_zundamon: true,
+      }])
+    },
     onMutate: (content) => {
       queryClient.setQueryData<Message[]>(getMessagesKey, (oldMessages) => [...(oldMessages ?? []), {
         id: Math.random(),
