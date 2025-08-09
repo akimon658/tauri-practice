@@ -33,9 +33,11 @@ pub fn speak(text: &str) -> anyhow::Result<(), anyhow::Error> {
     let wav = synth.tts(text, style_id).perform()?;
     let stream_handle = rodio::OutputStreamBuilder::open_default_stream()?;
     let file = std::io::Cursor::new(wav);
-    let _sink = rodio::play(&stream_handle.mixer(), file)?;
+    let sink = rodio::play(&stream_handle.mixer(), file)?;
 
-    std::thread::sleep(std::time::Duration::from_secs(5));
+    sink.sleep_until_end();
+    // 音が途切れるので1秒追加で待機する
+    std::thread::sleep(std::time::Duration::from_secs(1));
 
     Ok(())
 }
