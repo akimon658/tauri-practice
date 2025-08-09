@@ -7,7 +7,7 @@ impl MessagingService {
         MessagingService { repository }
     }
 
-    pub async fn send_message(&mut self, message: &str) -> anyhow::Result<String> {
+    pub async fn send_message(&self, message: &str) -> anyhow::Result<String> {
         self.repository.save_message(message, false).await?;
 
         let response = message.to_string();

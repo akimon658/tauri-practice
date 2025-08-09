@@ -5,6 +5,9 @@
 
 
 export const commands = {
+async sendMessage(message: string) : Promise<string> {
+    return await TAURI_INVOKE("send_message", { message });
+},
 async speak(text: string) : Promise<null> {
     return await TAURI_INVOKE("speak", { text });
 }

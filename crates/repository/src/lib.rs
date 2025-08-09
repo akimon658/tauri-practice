@@ -1,8 +1,7 @@
 use anyhow::Context;
-use sqlx::Connection;
 
 pub struct RepositoryImpl {
-    conn: sqlx::SqliteConnection,
+    pool: sqlx::SqlitePool,
 }
 
 impl RepositoryImpl {
@@ -11,7 +10,7 @@ impl RepositoryImpl {
             + sqlite_file_path
                 .to_str()
                 .ok_or(anyhow::anyhow!("failed to convert database path to string"))?;
-        let mut conn = sqlx::SqliteConnection::connect(&database_url)
+        let pool = sqlx::SqlitePool::connect(&database_url)
             .await
             .with_context(|| {
                 format!(
@@ -20,18 +19,18 @@ impl RepositoryImpl {
                 )
             })?;
 
-        sqlx::migrate!().run(&mut conn).await?;
+        sqlx::migrate!().run(&pool).await?;
 
-        Ok(RepositoryImpl { conn })
+        Ok(RepositoryImpl { pool })
     }
 
-    pub async fn save_message(&mut self, message: &str, by_zundamon: bool) -> anyhow::Result<()> {
+    pub async fn save_message(&self, message: &str, by_zundamon: bool) -> anyhow::Result<()> {
         sqlx::query!(
             "INSERT INTO messages (content, by_zundamon) VALUES (?, ?)",
             message,
             by_zundamon
         )
-        .execute(&mut self.conn)
+        .execute(&self.pool)
         .await?;
 
         Ok(())

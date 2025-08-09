@@ -1,4 +1,4 @@
-import { useSpeak } from "../../api/hooks.ts";
+import { useSendMessage, useSpeak } from "../../api/hooks.ts";
 import { Textarea } from "./components/Textarea.tsx";
 import { IconButton } from "./components/IconButton.tsx";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
@@ -11,9 +11,10 @@ type ChatForm = {
 
 export const Chat = () => {
   const { mutate: speak } = useSpeak();
+  const { mutate: sendMessage } = useSendMessage((res) => speak(res))
   const { formState: { isValid }, handleSubmit, register, reset } = useForm<ChatForm>()
   const onSubmit = (data: ChatForm) => {
-    speak(data.text);
+    sendMessage(data.text);
     reset();
   }
 

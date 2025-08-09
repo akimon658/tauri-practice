@@ -6,6 +6,17 @@ struct AppState {
 
 #[tauri::command]
 #[specta::specta]
+async fn send_message(state: tauri::State<'_, AppState>, message: &str) -> Result<String, String> {
+    let service = &state.messaging_service;
+
+    service
+        .send_message(message)
+        .await
+        .map_err(|e| format!("Failed to send message: {}", e))
+}
+
+#[tauri::command]
+#[specta::specta]
 fn speak(text: &str) -> Result<(), String> {
     voice::speak(text)
         .map_err(|e| format!("Failed to speak: {}", e))
@@ -15,7 +26,7 @@ fn speak(text: &str) -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() -> anyhow::Result<()> {
     let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
-        .commands(tauri_specta::collect_commands![speak])
+        .commands(tauri_specta::collect_commands![send_message, speak])
         .error_handling(tauri_specta::ErrorHandlingMode::Throw);
 
     specta_builder.export(
@@ -35,9 +46,6 @@ pub fn run() -> anyhow::Result<()> {
                 }
             }
 
-            Ok(())
-        })
-        .setup(|app| {
             tauri::async_runtime::block_on(async || -> anyhow::Result<()> {
                 let sqlite_file_path = if cfg!(debug_assertions) {
                     std::env::current_dir()?.join("../../data")
@@ -56,7 +64,7 @@ pub fn run() -> anyhow::Result<()> {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![speak])
+        .invoke_handler(tauri::generate_handler![send_message, speak])
         .run(tauri::generate_context!())?;
 
     Ok(())
