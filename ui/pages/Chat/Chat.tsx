@@ -22,7 +22,11 @@ export const Chat = () => {
       return messages;
     },
   })
-  const { formState: { isValid }, handleSubmit, register, reset } = useForm<ChatForm>()
+  const { formState: { isValid }, handleSubmit, register, reset } = useForm<ChatForm>({
+    defaultValues: {
+      text: '',
+    }
+  })
   const queryClient = useQueryClient();
   const { mutate: sendMessage } = useMutation({
     mutationKey: sendMessageKey,
