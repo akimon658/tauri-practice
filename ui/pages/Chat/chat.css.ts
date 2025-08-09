@@ -14,6 +14,7 @@ export const messagesContainer = style({
   gap: 8,
   padding: 16,
   overflowY: "auto",
+  flexGrow: 1,
 })
 
 export const messageStyleBase = style({
