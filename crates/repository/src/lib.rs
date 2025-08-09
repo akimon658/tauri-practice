@@ -12,16 +12,21 @@ impl RepositoryImpl {
                 .ok_or(anyhow::anyhow!("failed to convert database path to string"))?;
         let pool = sqlx::SqlitePool::connect(&database_url)
             .await
-            .with_context(|| {
-                format!(
-                    "failed to connect to database at {}",
-                    sqlite_file_path.display()
-                )
-            })?;
+            .with_context(|| format!("connect to database at {}", sqlite_file_path.display()))?;
 
         sqlx::migrate!().run(&pool).await?;
 
         Ok(RepositoryImpl { pool })
+    }
+
+    pub async fn get_messages(&self) -> anyhow::Result<Vec<model::Message>> {
+        sqlx::query_as!(
+            model::Message,
+            r#"SELECT id as "id: u32", content, by_zundamon FROM messages ORDER BY created_at DESC"#,
+        )
+        .fetch_all(&self.pool)
+        .await
+        .with_context(|| "fetch messages from database")
     }
 
     pub async fn save_message(&self, message: &str, by_zundamon: bool) -> anyhow::Result<()> {

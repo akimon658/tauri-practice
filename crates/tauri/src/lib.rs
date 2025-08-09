@@ -6,6 +6,17 @@ struct AppState {
 
 #[tauri::command]
 #[specta::specta]
+async fn get_messages(state: tauri::State<'_, AppState>) -> Result<Vec<model::Message>, String> {
+    let service = &state.messaging_service;
+
+    service
+        .get_messages()
+        .await
+        .map_err(|e| format!("Failed to get messages: {}", e))
+}
+
+#[tauri::command]
+#[specta::specta]
 async fn send_message(state: tauri::State<'_, AppState>, message: &str) -> Result<String, String> {
     let service = &state.messaging_service;
 
@@ -26,7 +37,12 @@ fn speak(text: &str) -> Result<(), String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() -> anyhow::Result<()> {
     let specta_builder = tauri_specta::Builder::<tauri::Wry>::new()
-        .commands(tauri_specta::collect_commands![send_message, speak])
+        .commands(tauri_specta::collect_commands![
+            get_messages,
+            send_message,
+            speak,
+        ])
+        .typ::<model::Message>()
         .error_handling(tauri_specta::ErrorHandlingMode::Throw);
 
     specta_builder.export(
@@ -64,7 +80,7 @@ pub fn run() -> anyhow::Result<()> {
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![send_message, speak])
+        .invoke_handler(tauri::generate_handler![get_messages, send_message, speak])
         .run(tauri::generate_context!())?;
 
     Ok(())

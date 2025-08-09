@@ -5,4 +5,5 @@ edition.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
+model = { path = "../model" }
 repository = { path = "../repository" }

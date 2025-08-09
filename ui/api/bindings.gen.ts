@@ -5,6 +5,9 @@
 
 
 export const commands = {
+async getMessages() : Promise<Message[]> {
+    return await TAURI_INVOKE("get_messages");
+},
 async sendMessage(message: string) : Promise<string> {
     return await TAURI_INVOKE("send_message", { message });
 },
@@ -23,7 +26,7 @@ async speak(text: string) : Promise<null> {
 
 /** user-defined types **/
 
-
+export type Message = { id: number; content: string; by_zundamon: boolean }
 
 /** tauri-specta globals **/
 
